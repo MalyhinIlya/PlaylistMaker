@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="app_name_bottom_margin">16dp</dimen>
+    <dimen name="app_name_vert_padding">16dp</dimen>
+    <dimen name="app_name_font_size">20sp</dimen>
+    <dimen name="main_horizontal_margin">16dp</dimen>
+    <dimen name="main_buttons_radius">16dp</dimen>
+    <dimen name="icon_padding">1dp</dimen>
+    <dimen name="top_nav_bar_height">56dp</dimen>
+    <dimen name="top_nav_bar_bottom_margin">24dp</dimen>
+    <dimen name="top_nav_bar_font_size">20sp</dimen>
+    <dimen name="back_button_padding">16dp</dimen>
+    <dimen name="base_font_size">16sp</dimen>
+    <dimen name="settings_vert_padding">21dp</dimen>
+    <dimen name="settings_start_padding">16dp</dimen>
+</resources>
