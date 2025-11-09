@@ -6,19 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MediaGalleryActivity">
-    <Button
+    <Toolbar
         android:id="@+id/back_to_main"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_nav_bar_height"
-        android:backgroundTint="@color/white"
-        android:layout_marginBottom="@dimen/top_nav_bar_bottom_margin"
-        android:text="@string/mediastore"
-        android:textColor="@color/base_font_color"
-        android:textAlignment="textStart"
-        android:textSize="@dimen/top_nav_bar_font_size"
-        android:foreground="?attr/selectableItemBackground"
-        app:icon="@drawable/back"
-        app:iconGravity="start"
-        app:iconTint="@color/black"
-        app:iconPadding="@dimen/back_button_padding"/>
+        android:navigationIcon="@drawable/back"
+        android:title="@string/mediastore"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
