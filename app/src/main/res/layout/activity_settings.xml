@@ -5,12 +5,12 @@
     android:id="@+id/main"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/back_to_main"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_nav_bar_height"
-        android:navigationIcon="@drawable/back"
-        android:title="@string/settings"/>
+        app:navigationIcon="@drawable/back"
+        app:title="@string/settings"/>
 
     <Switch
         android:layout_width="match_parent"

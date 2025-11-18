@@ -6,17 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="#3772E7">
-    <TextView
+
+    <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/app_name_bottom_margin"
-        android:layout_marginHorizontal="@dimen/main_horizontal_margin"
-        android:paddingVertical="@dimen/app_name_vert_padding"
-        android:layout_gravity="start"
-        android:text="@string/app_name"
-        android:textColor="@color/white"
-        android:textSize="@dimen/app_name_font_size" />
-
+        app:titleTextColor="@color/white"
+        app:title="@string/app_name"
+        />
     <Button
         android:id="@+id/search_button"
         android:layout_width="match_parent"
