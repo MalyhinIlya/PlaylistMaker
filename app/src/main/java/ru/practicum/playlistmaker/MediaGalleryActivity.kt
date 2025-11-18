@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.appbar.MaterialToolbar
 
 class MediaGalleryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +21,7 @@ class MediaGalleryActivity : AppCompatActivity() {
             insets
         }
 
-        val backButton = findViewById<Toolbar>(R.id.back_to_main)
-        backButton.setOnClickListener { startActivity(Intent(this, MainActivity::class.java)) }
+        val backButton = findViewById<MaterialToolbar>(R.id.back_to_main)
+        backButton.setNavigationOnClickListener { finish() }
     }
 }
