@@ -69,11 +69,6 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(SEARCH_TEXT, searchText)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        searchText = savedInstanceState.getString(SEARCH_TEXT, "")
-    }
-
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
     }
