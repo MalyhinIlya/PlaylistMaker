@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="?attr/colorPrimary"
     tools:context=".SearchActivity">
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/back_to_main"
@@ -35,8 +36,8 @@
             android:layout_marginEnd="@dimen/edit_text_end_icon_margin_end"
             android:scaleType="centerCrop"
             android:layout_gravity="end|center"
-            android:visibility="gone"
+            android:visibility="visible"
             android:background="?attr/selectableItemBackground"
-            app:tint="?attr/colorOnSecondary" />
+            app:tint="?attr/hintTextColor" />
     </FrameLayout>
 </LinearLayout>

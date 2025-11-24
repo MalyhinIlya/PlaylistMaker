@@ -31,25 +31,25 @@ class SettingsActivity : AppCompatActivity() {
         toolbar.setTitleTextAppearance(this, R.style.header_style)
         toolbar.setNavigationOnClickListener { finish() }
 
-        val shareAppIntent = Intent(Intent.ACTION_SEND)
-        shareAppIntent.setType("text/plain")
-        shareAppIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_link))
         findViewById<TextView>(R.id.share_app).setOnClickListener {
+            val shareAppIntent = Intent(Intent.ACTION_SEND)
+            shareAppIntent.setType("text/plain")
+            shareAppIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_link))
             startActivity(shareAppIntent)
         }
 
-        val needHelpIntent = Intent(Intent.ACTION_SENDTO)
-        needHelpIntent.data = "mailto:".toUri()
-        needHelpIntent.putExtra(Intent.EXTRA_EMAIL, getString(R.string.contact_us))
-        needHelpIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.need_help_mail_subject))
-        needHelpIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.need_help_mail_message))
         findViewById<TextView>(R.id.need_help).setOnClickListener {
+            val needHelpIntent = Intent(Intent.ACTION_SENDTO)
+            needHelpIntent.data = "mailto:".toUri()
+            needHelpIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.contact_us)))
+            needHelpIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.need_help_mail_subject))
+            needHelpIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.need_help_mail_message))
             startActivity(needHelpIntent)
         }
 
-        val userAgreementIntent = Intent(Intent.ACTION_VIEW)
-        userAgreementIntent.data = getString(R.string.user_agreement_link).toUri()
         findViewById<TextView>(R.id.user_aggreement).setOnClickListener {
+            val userAgreementIntent = Intent(Intent.ACTION_VIEW)
+            userAgreementIntent.data = getString(R.string.user_agreement_link).toUri()
             startActivity(userAgreementIntent)
         }
 

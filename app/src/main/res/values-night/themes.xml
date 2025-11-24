@@ -8,5 +8,6 @@
         <item name="editTextBackground">@color/white</item>
         <item name="hintTextColor">@color/dark_base_color</item>
         <item name="editTextColor">@color/dark_base_color</item>
+        <item name="drawableTint">@color/white</item>
     </style>
 </resources>

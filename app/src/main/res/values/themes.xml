@@ -6,7 +6,8 @@
         <item name="backgroundColor">@color/main_screen_background</item>
         <item name="colorOnBackground">@color/white</item>
         <item name="editTextBackground">@color/search_field_background</item>
-        <item name="hintTextColor">@color/base_hint_color</item>
+        <item name="hintTextColor">@color/base_tint_color</item>
         <item name="editTextColor">@color/dark_base_color</item>
+        <item name="drawableTint">@color/base_tint_color</item>
     </style>
 </resources>
