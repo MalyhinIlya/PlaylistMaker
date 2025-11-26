@@ -22,6 +22,7 @@ class MediaGalleryActivity : AppCompatActivity() {
         }
 
         val backButton = findViewById<MaterialToolbar>(R.id.back_to_main)
+        backButton.setTitleTextAppearance(this, R.style.header_style)
         backButton.setNavigationOnClickListener { finish() }
     }
 }

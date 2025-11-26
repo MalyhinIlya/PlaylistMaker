@@ -10,6 +10,8 @@
         android:id="@+id/back_to_main"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_nav_bar_height"
+        style="@style/header_style"
         app:navigationIcon="@drawable/back"
+        app:titleTextColor="?attr/colorOnPrimary"
         app:title="@string/mediastore"/>
 </LinearLayout>

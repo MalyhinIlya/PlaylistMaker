@@ -1,15 +1,19 @@
 package ru.practicum.playlistmaker
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
+import androidx.core.net.toUri
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -23,7 +27,31 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        val backButton = findViewById<MaterialToolbar>(R.id.back_to_main)
-        backButton.setNavigationOnClickListener { finish() }
+        val toolbar = findViewById<MaterialToolbar>(R.id.back_to_main)
+        toolbar.setTitleTextAppearance(this, R.style.header_style)
+        toolbar.setNavigationOnClickListener { finish() }
+
+        findViewById<TextView>(R.id.share_app).setOnClickListener {
+            val shareAppIntent = Intent(Intent.ACTION_SEND)
+            shareAppIntent.setType("text/plain")
+            shareAppIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_link))
+            startActivity(shareAppIntent)
+        }
+
+        findViewById<TextView>(R.id.need_help).setOnClickListener {
+            val needHelpIntent = Intent(Intent.ACTION_SENDTO)
+            needHelpIntent.data = "mailto:".toUri()
+            needHelpIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.contact_us)))
+            needHelpIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.need_help_mail_subject))
+            needHelpIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.need_help_mail_message))
+            startActivity(needHelpIntent)
+        }
+
+        findViewById<TextView>(R.id.user_aggreement).setOnClickListener {
+            val userAgreementIntent = Intent(Intent.ACTION_VIEW)
+            userAgreementIntent.data = getString(R.string.user_agreement_link).toUri()
+            startActivity(userAgreementIntent)
+        }
+
     }
 }
