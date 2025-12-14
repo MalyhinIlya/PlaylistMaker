@@ -4,53 +4,44 @@
     android:layout_height="match_parent"
     android:id="@+id/main"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/colorPrimary"
     android:orientation="vertical">
+
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/back_to_main"
+        style="@style/header_style"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_nav_bar_height"
         app:navigationIcon="@drawable/back"
-        app:title="@string/settings"/>
+        app:title="@string/settings" />
 
     <Switch
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/dark_theme"
-        android:paddingVertical="@dimen/settings_vert_padding"
-        android:paddingStart="@dimen/settings_start_padding"
         android:paddingEnd="@dimen/settings_switch_end_padding"
-        android:checked="true"/>
+        android:thumbTint="@color/switch_thumb_color"
+        android:trackTint="#76EAE0"
+        style="@style/settings_text_view_style"/>
     <TextView
+        android:id="@+id/share_app"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/settings_vert_padding"
-        android:paddingStart="@dimen/settings_start_padding"
-        android:paddingEnd="@dimen/settings_end_padding"
-        android:textColor="@color/base_font_color"
         android:text="@string/share_app"
         app:drawableEndCompat="@drawable/share_app"
-        app:drawableTint="@color/setting_icon_color" />
-
+        style="@style/settings_text_view_style"/>
     <TextView
+        android:id="@+id/need_help"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/settings_vert_padding"
-        android:paddingStart="@dimen/settings_start_padding"
-        android:paddingEnd="@dimen/settings_end_padding"
-        android:textColor="@color/base_font_color"
         android:text="@string/need_help"
         app:drawableEndCompat="@drawable/need_help"
-        app:drawableTint="@color/setting_icon_color" />
-
-
+        style="@style/settings_text_view_style"/>
     <TextView
+        android:id="@+id/user_aggreement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/settings_vert_padding"
-        android:paddingStart="@dimen/settings_start_padding"
-        android:paddingEnd="@dimen/settings_end_padding"
-        android:textColor="@color/base_font_color"
-        android:text="@string/share_app"
+        android:text="@string/user_aggreement"
         app:drawableEndCompat="@drawable/arrow_forward"
-        app:drawableTint="@color/setting_icon_color" />
+        style="@style/settings_text_view_style" />
 </LinearLayout>
