@@ -37,6 +37,7 @@
         android:text="@string/need_help"
         app:drawableEndCompat="@drawable/need_help"
         style="@style/settings_text_view_style"/>
+
     <TextView
         android:id="@+id/user_aggreement"
         android:layout_width="match_parent"

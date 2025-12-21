@@ -12,4 +12,6 @@
     <string name="need_help_mail_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="need_help_mail_message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="user_agreement_link" translatable="false">https://yandex.ru/legal/practicum_offer/ru/</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

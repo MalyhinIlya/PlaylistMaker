@@ -19,8 +19,10 @@ import androidx.collection.arraySetOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Visibility
 import com.google.android.material.appbar.MaterialToolbar
+import ru.practicum.playlistmaker.model.MockTracks
 
 class SearchActivity : AppCompatActivity() {
     private var searchText = ""
@@ -59,6 +61,10 @@ class SearchActivity : AppCompatActivity() {
                 clearTextButton.visibility = VISIBLE
             }
         })
+
+        val recyclerView = findViewById<RecyclerView>(R.id.track_view)
+        val adapter = TrackAdapter(MockTracks.tracks)
+        recyclerView.adapter = adapter
     }
 
     override fun onSaveInstanceState(
