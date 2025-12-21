@@ -6,13 +6,23 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/album_img"
+    <androidx.cardview.widget.CardView
         android:layout_width="@dimen/album_image_length"
         android:layout_height="@dimen/album_image_length"
-        android:layout_marginVertical="@dimen/album_vert_margin"
         android:layout_marginStart="@dimen/album_start_margin"
-        android:layout_marginEnd="@dimen/album_end_margin" />
+        android:layout_marginVertical="@dimen/album_vert_margin"
+        android:layout_marginEnd="@dimen/album_end_margin"
+        app:cardCornerRadius="2dp">
+
+        <ImageView
+            android:id="@+id/album_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/placeholder"
+
+            />
+    </androidx.cardview.widget.CardView>
+
 
     <LinearLayout
         android:layout_width="match_parent"
