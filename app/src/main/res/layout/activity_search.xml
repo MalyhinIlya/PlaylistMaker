@@ -5,45 +5,78 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="?attr/colorPrimary"
+    android:orientation="vertical"
     tools:context=".SearchActivity">
+
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/back_to_main"
+        style="@style/header_style"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_nav_bar_height"
-        style="@style/header_style"
         app:navigationIcon="@drawable/back"
-        app:title="@string/search"/>
+        app:title="@string/search" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/search_layout_hor_padding"
-        android:paddingVertical="@dimen/search_layout_vert_padding"
-        >
+        android:paddingVertical="@dimen/search_layout_vert_padding">
+
         <EditText
             android:id="@+id/search_field"
+            style="@style/edit_text_field"
             android:layout_width="match_parent"
             android:layout_height="@dimen/edit_text_height"
             android:drawableStart="@drawable/search"
-            style="@style/edit_text_field"
-            android:hint="@string/search"/>
+            android:hint="@string/search" />
+
         <ImageButton
             android:id="@+id/clear_text"
             android:layout_width="@dimen/edit_text_end_icon_width"
             android:layout_height="@dimen/edit_text_end_icon_height"
-            android:src="@drawable/close_cross"
-            android:layout_marginEnd="@dimen/edit_text_end_icon_margin_end"
-            android:scaleType="centerCrop"
             android:layout_gravity="end|center"
-            android:visibility="gone"
+            android:layout_marginEnd="@dimen/edit_text_end_icon_margin_end"
             android:background="?attr/selectableItemBackground"
+            android:scaleType="centerCrop"
+            android:src="@drawable/close_cross"
+            android:visibility="gone"
             app:tint="?attr/hintTextColor" />
     </FrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/track_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+    <LinearLayout
+        android:id="@+id/trouble_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/trouble_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/tracks_empty"/>
+
+        <TextView
+            android:id="@+id/trouble_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/search_error_text"
+            android:textAlignment="center"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/refresh_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/searh_button_style"
+            android:text="@string/refresh"/>
+    </LinearLayout>
 </LinearLayout>

@@ -10,4 +10,5 @@
     <string name="user_aggreement">User Aggreement</string>
     <string name="need_help_mail_subject">Message for Playlist Maker developers </string>
     <string name="need_help_mail_message">Thanks to the developers for a cool app!</string>
+    <string name="refresh">Refresh</string>
 </resources>
