@@ -18,6 +18,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import retrofit2.Call
@@ -73,6 +74,19 @@ class SearchActivity : AppCompatActivity() {
         if(savedInstanceState != null) searchField.setText(savedInstanceState.getString(SEARCH_TEXT, ""))
 
         val clearTextButton = findViewById<ImageButton>(R.id.clear_text)
+
+        searchField.addTextChangedListener(onTextChanged = { text: CharSequence?, start: Int, before: Int, count: Int ->
+            if (text.isNullOrEmpty()) {
+                searchText = ""
+                tracks.clear()
+                adapter.notifyDataSetChanged()
+                clearTextButton.visibility = GONE
+                troubleView.visibility = GONE
+            } else {
+                searchText = text.toString()
+                clearTextButton.visibility = VISIBLE
+            }
+        })
 
         clearTextButton.setOnClickListener {
             searchField.setText("")

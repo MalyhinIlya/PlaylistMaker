@@ -13,6 +13,7 @@
         android:layout_marginVertical="@dimen/album_vert_margin"
         android:layout_marginEnd="@dimen/album_end_margin"
         app:cardElevation="0dp"
+        app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="2dp">
 
         <ImageView
