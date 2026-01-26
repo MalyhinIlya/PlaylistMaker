@@ -1,11 +1,10 @@
 package ru.practicum.playlistmaker
 
 import android.content.Context
-import android.graphics.drawable.Drawable
-import android.media.Image
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.util.Log
+import android.view.KeyEvent
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
@@ -19,7 +18,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import retrofit2.Call
@@ -30,6 +28,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.playlistmaker.model.Track
 import ru.practicum.playlistmaker.model.TracksResponse
 
+const val TRACKS_BASE_URL = "https://itunes.apple.com"
+
 class SearchActivity : AppCompatActivity() {
     private var searchText = ""
     private lateinit var recyclerView: RecyclerView
@@ -37,14 +37,12 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var troubleImage: ImageView
     private lateinit var troubleText: TextView
     private lateinit var refreshButton: Button
-    private val translateBaseUrl = "https://itunes.apple.com"
-
     private val retrofit = Retrofit.Builder()
-        .baseUrl(translateBaseUrl)
+        .baseUrl(TRACKS_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val trackService = retrofit.create(TrackApi::class.java)
-    private val tracks = ArrayList<Track>()
+    private val tracks = mutableListOf<Track>()
     private val adapter = TrackAdapter(tracks)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,31 +76,42 @@ class SearchActivity : AppCompatActivity() {
 
         clearTextButton.setOnClickListener {
             searchField.setText("")
+            tracks.clear()
+            adapter.notifyDataSetChanged()
+            clearTextButton.visibility = GONE
+            troubleView.visibility = GONE
             searchField.clearFocus()
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(searchField.windowToken, 0)
         }
 
-        searchField.addTextChangedListener(onTextChanged = { text: CharSequence?, start: Int, before: Int, count: Int ->
-            if (text.isNullOrEmpty()) {
-                searchText = ""
-                clearTextButton.visibility = GONE
-            } else {
-                searchText = text.toString()
-                clearTextButton.visibility = VISIBLE
-                searchTrack(searchText)
+        searchField.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                val text = searchField.text
+                if (text.isNullOrEmpty()) {
+                    searchText = ""
+                    clearTextButton.visibility = GONE
+                } else {
+                    searchText = text.toString()
+                    clearTextButton.visibility = VISIBLE
+                    searchTrack(searchText)
+                }
+                return@OnKeyListener true
             }
+            false
         })
+
         recyclerView.adapter = adapter
     }
 
     private fun searchTrack(searchText: String) {
         trackService.findTrack(searchText).enqueue(object : Callback<TracksResponse> {
             override fun onResponse(call: Call<TracksResponse?>, response: Response<TracksResponse?>) {
-                if (response.code() == 200) {
+                if (response.isSuccessful) {
                     tracks.clear()
-                    if (response.body()?.results?.isNotEmpty() == true) {
-                        tracks.addAll(response.body()?.results!!)
+                    val result = response.body()?.results
+                    if (result?.isNotEmpty() == true) {
+                        tracks.addAll(result)
                         adapter.notifyDataSetChanged()
                     }
                     if (tracks.isEmpty()) {

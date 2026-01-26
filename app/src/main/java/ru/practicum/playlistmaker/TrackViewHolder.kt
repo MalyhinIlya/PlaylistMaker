@@ -1,6 +1,7 @@
 package ru.practicum.playlistmaker
 
 import android.app.Application
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
@@ -20,6 +21,7 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     val trackDuration = itemView.findViewById<TextView>(R.id.track_duration)
 
     fun bind(track: Track) {
+        albumImg.setBackgroundColor(Color.TRANSPARENT)
         Glide.with(itemView).load(track.artworkUrl100).into(albumImg).onLoadFailed(
             ContextCompat.getDrawable(itemView.context, R.drawable.placeholder)
         )
