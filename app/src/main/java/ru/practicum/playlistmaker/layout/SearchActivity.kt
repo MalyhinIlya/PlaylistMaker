@@ -1,8 +1,9 @@
-package ru.practicum.playlistmaker
+package ru.practicum.playlistmaker.layout
 
-import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.View.GONE
@@ -21,16 +22,21 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.practicum.playlistmaker.PLAYLIST_MAKER_SHARED_PREFS
+import ru.practicum.playlistmaker.R
+import ru.practicum.playlistmaker.adapter.TrackAdapter
+import ru.practicum.playlistmaker.api.TrackApi
 import ru.practicum.playlistmaker.model.Track
 import ru.practicum.playlistmaker.model.TracksResponse
+import ru.practicum.playlistmaker.service.HistoryService
 
 const val TRACKS_BASE_URL = "https://itunes.apple.com"
-
 class SearchActivity : AppCompatActivity() {
     private var searchText = ""
     private lateinit var recyclerView: RecyclerView
@@ -38,13 +44,43 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var troubleImage: ImageView
     private lateinit var troubleText: TextView
     private lateinit var refreshButton: Button
+    private lateinit var backButton: MaterialToolbar
+    private lateinit var clearTextButton: ImageButton
+    private lateinit var searchField: EditText
+    private lateinit var youSearch: TextView
+    private lateinit var clearHistory: MaterialButton
+    private lateinit var historyService: HistoryService
+    private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var adapter: TrackAdapter
     private val retrofit = Retrofit.Builder()
         .baseUrl(TRACKS_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val trackService = retrofit.create(TrackApi::class.java)
     private val tracks = mutableListOf<Track>()
-    private val adapter = TrackAdapter(tracks)
+
+    fun init() {
+        troubleText = findViewById(R.id.trouble_text)
+        troubleImage = findViewById(R.id.trouble_image)
+        troubleView = findViewById(R.id.trouble_layout)
+        recyclerView = findViewById(R.id.track_view)
+
+        backButton = findViewById(R.id.back_to_main)
+        backButton.setTitleTextAppearance(this, R.style.header_style)
+        backButton.setNavigationOnClickListener { finish() }
+
+        refreshButton = findViewById(R.id.refresh_button)
+        refreshButton.setOnClickListener { refreshSearch() }
+
+        clearTextButton = findViewById(R.id.clear_text)
+        searchField = findViewById<EditText>(R.id.search_field)
+        youSearch = findViewById<TextView>(R.id.you_search)
+        clearHistory = findViewById(R.id.clear_history)
+
+        sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_SHARED_PREFS, MODE_PRIVATE)
+        historyService = HistoryService(sharedPrefs, tracks)
+        adapter = TrackAdapter(tracks, historyService)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,65 +93,88 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        troubleText = findViewById(R.id.trouble_text)
-        troubleImage = findViewById(R.id.trouble_image)
-        troubleView = findViewById(R.id.trouble_layout)
-        recyclerView = findViewById(R.id.track_view)
+        init()
 
-        val backButton = findViewById<MaterialToolbar>(R.id.back_to_main)
-        backButton.setTitleTextAppearance(this, R.style.header_style)
-        backButton.setNavigationOnClickListener { finish() }
-
-        refreshButton = findViewById(R.id.refresh_button)
-        refreshButton.setOnClickListener { refreshSearch() }
-
-        val searchField = findViewById<EditText>(R.id.search_field)
-
-        if(savedInstanceState != null) searchField.setText(savedInstanceState.getString(SEARCH_TEXT, ""))
-
-        val clearTextButton = findViewById<ImageButton>(R.id.clear_text)
+        if(savedInstanceState != null)
+            searchField.setText(savedInstanceState.getString(SEARCH_TEXT, ""))
 
         searchField.addTextChangedListener(onTextChanged = { text: CharSequence?, start: Int, before: Int, count: Int ->
+            onChangeText(text)
+        })
+
+        searchField.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus && searchField.text.isEmpty() && !historyService.isEmpty()) {
+                youSearch.visibility = VISIBLE
+                recyclerView.visibility = VISIBLE
+                clearHistory.visibility = VISIBLE
+                historyService.showHistory()
+                adapter.notifyDataSetChanged()
+            } else {
+                youSearch.visibility = GONE
+                clearHistory.visibility = GONE
+            }
+        }
+
+        clearTextButton.setOnClickListener {
+            onClearTextButtonClick()
+        }
+
+        searchField.setOnKeyListener { v, keyCode, event ->
+            onKeyClick(keyCode, event.action)
+        }
+
+        clearHistory.setOnClickListener {
+            historyService.clearHistory()
+            adapter.notifyDataSetChanged()
+            hideHistoryView()
+        }
+
+        recyclerView.adapter = adapter
+    }
+
+    private fun hideHistoryView() {
+        youSearch.visibility = GONE
+        clearHistory.visibility = GONE
+    }
+
+    private fun onKeyClick(keyCode: Int, action: Int): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && action == KeyEvent.ACTION_UP) {
+            val text = searchField.text
             if (text.isNullOrEmpty()) {
                 searchText = ""
-                tracks.clear()
-                adapter.notifyDataSetChanged()
                 clearTextButton.visibility = GONE
-                troubleView.visibility = GONE
             } else {
                 searchText = text.toString()
                 clearTextButton.visibility = VISIBLE
+                searchTrack(searchText)
             }
-        })
+            return true
+        }
+        return false
+    }
 
-        clearTextButton.setOnClickListener {
-            searchField.setText("")
+    private fun onClearTextButtonClick() {
+        searchField.setText("")
+        tracks.clear()
+        adapter.notifyDataSetChanged()
+        clearTextButton.visibility = GONE
+        troubleView.visibility = GONE
+        searchField.clearFocus()
+        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(searchField.windowToken, 0)
+    }
+
+    private fun onChangeText(text: CharSequence?) {
+        if (text.isNullOrEmpty()) {
+            searchText = ""
             tracks.clear()
             adapter.notifyDataSetChanged()
             clearTextButton.visibility = GONE
             troubleView.visibility = GONE
-            searchField.clearFocus()
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(searchField.windowToken, 0)
+        } else {
+            searchText = text.toString()
+            clearTextButton.visibility = VISIBLE
         }
-
-        searchField.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
-                val text = searchField.text
-                if (text.isNullOrEmpty()) {
-                    searchText = ""
-                    clearTextButton.visibility = GONE
-                } else {
-                    searchText = text.toString()
-                    clearTextButton.visibility = VISIBLE
-                    searchTrack(searchText)
-                }
-                return@OnKeyListener true
-            }
-            false
-        })
-
-        recyclerView.adapter = adapter
     }
 
     private fun searchTrack(searchText: String) {
