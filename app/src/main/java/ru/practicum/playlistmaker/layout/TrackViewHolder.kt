@@ -1,14 +1,13 @@
-package ru.practicum.playlistmaker
+package ru.practicum.playlistmaker.layout
 
-import android.app.Application
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import ru.practicum.playlistmaker.R
 import ru.practicum.playlistmaker.model.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -29,4 +28,6 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         trackName.text = track.trackName
         trackDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
     }
+
+
 }

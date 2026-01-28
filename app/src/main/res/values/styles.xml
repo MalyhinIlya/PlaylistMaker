@@ -34,9 +34,8 @@
     <style name="settings_text_view_style">
         <item name="android:paddingVertical">@dimen/settings_vert_padding</item>
         <item name="android:paddingStart">@dimen/settings_start_padding</item>
-        <item name="android:paddingEnd">@dimen/settings_end_padding</item>
+        <item name="android:paddingEnd">@dimen/settings_switch_end_padding</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="drawableEndCompat">@drawable/share_app</item>
         <item name="drawableTint">?attr/drawableTint</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textSize">16sp</item>
@@ -54,8 +53,7 @@
         <item name="android:focusable">true</item>
         <item name="android:inputType">text</item>
     </style>
-    <style name="search_error_text">
-        <item name="android:layout_marginTop">@dimen/main_horizontal_margin</item>
+    <style name="search_text">
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:textSize">@dimen/trouble_text_size</item>
