@@ -12,14 +12,15 @@
         android:layout_marginStart="@dimen/album_start_margin"
         android:layout_marginVertical="@dimen/album_vert_margin"
         android:layout_marginEnd="@dimen/album_end_margin"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="2dp">
 
         <ImageView
             android:id="@+id/album_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/placeholder"
-
+            android:src="@drawable/placeholder"
             />
     </androidx.cardview.widget.CardView>
 
