@@ -146,6 +146,8 @@ class SearchActivity : AppCompatActivity() {
             } else {
                 searchText = text.toString()
                 clearTextButton.visibility = VISIBLE
+                youSearch.visibility = GONE
+                clearHistory.visibility = GONE
                 searchTrack(searchText)
             }
             return true
@@ -168,12 +170,20 @@ class SearchActivity : AppCompatActivity() {
         if (text.isNullOrEmpty()) {
             searchText = ""
             tracks.clear()
-            adapter.notifyDataSetChanged()
+            if (!historyService.isEmpty()) {
+                historyService.showHistory()
+                youSearch.visibility = VISIBLE
+                clearHistory.visibility = VISIBLE
+                adapter.notifyDataSetChanged()
+            }
             clearTextButton.visibility = GONE
             troubleView.visibility = GONE
         } else {
+            tracks.clear()
             searchText = text.toString()
             clearTextButton.visibility = VISIBLE
+            youSearch.visibility = GONE
+            clearHistory.visibility = GONE
         }
     }
 

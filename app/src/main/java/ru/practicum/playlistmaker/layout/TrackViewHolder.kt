@@ -21,11 +21,11 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
     fun bind(track: Track) {
         albumImg.setBackgroundColor(Color.TRANSPARENT)
-        Glide.with(itemView).load(track.artworkUrl100).into(albumImg).onLoadFailed(
-            ContextCompat.getDrawable(itemView.context, R.drawable.placeholder)
-        )
-        artist.text = track.artistName
-        trackName.text = track.trackName
+        Glide.with(itemView)
+            .load(track.artworkUrl100).into(albumImg)
+            .onLoadFailed(ContextCompat.getDrawable(itemView.context, R.drawable.placeholder))
+        artist.text = if (track.artistName.length > 30) track.artistName.substring(0, 29) + "..." else track.artistName
+        trackName.text = if (track.trackName.length > 30) track.trackName.substring(0, 29) + "..." else track.trackName
         trackDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
     }
 
