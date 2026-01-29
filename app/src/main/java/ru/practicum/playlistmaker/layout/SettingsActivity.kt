@@ -1,24 +1,28 @@
-package ru.practicum.playlistmaker
+package ru.practicum.playlistmaker.layout
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
-import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 import androidx.core.net.toUri
+import com.google.android.material.switchmaterial.SwitchMaterial
+import ru.practicum.playlistmaker.App
+import ru.practicum.playlistmaker.DARK_THEME_KEY
+import ru.practicum.playlistmaker.PLAYLIST_MAKER_SHARED_PREFS
+import ru.practicum.playlistmaker.R
 
+const val PLAYLIST_MAKER_SHARED_PREFS = "playlist_maker_shared_prefs"
+const val DARK_THEME_KEY = "DARK_THEME"
 class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_SHARED_PREFS, MODE_PRIVATE)
         setContentView(R.layout.activity_settings)
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -31,6 +35,18 @@ class SettingsActivity : AppCompatActivity() {
         toolbar.setTitleTextAppearance(this, R.style.header_style)
         toolbar.setNavigationOnClickListener { finish() }
 
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.theme_switcher)
+        themeSwitcher.isChecked = sharedPrefs.getBoolean(DARK_THEME_KEY, (applicationContext as App).darkTheme)
+        themeSwitcher.setOnCheckedChangeListener  {switcher, checked ->
+            sharedPrefs.edit().putBoolean(DARK_THEME_KEY, checked).apply()
+            AppCompatDelegate.setDefaultNightMode(
+                if (checked) {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                } else {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+            )
+        }
         findViewById<TextView>(R.id.share_app).setOnClickListener {
             val shareAppIntent = Intent(Intent.ACTION_SEND)
             shareAppIntent.setType("text/plain")
