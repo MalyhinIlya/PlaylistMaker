@@ -1,14 +1,12 @@
-package ru.practicum.playlistmaker
+package ru.practicum.playlistmaker.layout
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
+import ru.practicum.playlistmaker.R
 
 class MediaGalleryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -15,13 +15,12 @@
         app:navigationIcon="@drawable/back"
         app:title="@string/settings" />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/theme_switcher"
+        android:text="@string/dark_theme"
+        android:layout_gravity="start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/dark_theme"
-        android:paddingEnd="@dimen/settings_switch_end_padding"
-        android:thumbTint="@color/switch_thumb_color"
-        android:trackTint="#76EAE0"
         style="@style/settings_text_view_style"/>
     <TextView
         android:id="@+id/share_app"
@@ -40,9 +39,9 @@
 
     <TextView
         android:id="@+id/user_aggreement"
+        style="@style/settings_text_view_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/user_aggreement"
-        app:drawableEndCompat="@drawable/arrow_forward"
-        style="@style/settings_text_view_style" />
+        app:drawableEndCompat="@drawable/arrow_forward" />
 </LinearLayout>
