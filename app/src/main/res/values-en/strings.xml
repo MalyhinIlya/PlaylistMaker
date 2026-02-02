@@ -12,4 +12,5 @@
     <string name="need_help_mail_message">Thanks to the developers for a cool app!</string>
     <string name="refresh">Refresh</string>
     <string name="clear_history_text">Очистить историю</string>
+    <string name="duration">Длительность</string>
 </resources>
