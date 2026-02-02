@@ -12,7 +12,7 @@ import ru.practicum.playlistmaker.layout.TrackViewHolder
 import ru.practicum.playlistmaker.model.Track
 import ru.practicum.playlistmaker.service.HistoryService
 
-const val TRACK_KEY = "TARCK"
+const val TRACK_KEY = "TRACK"
 
 class TrackAdapter(private val tracks: List<Track>, private val historyService: HistoryService): RecyclerView.Adapter<TrackViewHolder>() {
 
