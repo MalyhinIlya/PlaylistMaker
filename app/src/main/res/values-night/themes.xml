@@ -9,5 +9,7 @@
         <item name="hintTextColor">@color/dark_base_color</item>
         <item name="editTextColor">@color/dark_base_color</item>
         <item name="drawableTint">@color/white</item>
+        <item name="thumbColor">@color/switch_thumb_color_checked</item>
+        <item name="trackColor">@color/switch_track_color_checked</item>
     </style>
 </resources>

@@ -21,6 +21,8 @@
         android:layout_gravity="start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:trackTint="?attr/trackColor"
+        app:thumbTint="?attr/thumbColor"
         style="@style/settings_text_view_style"/>
     <TextView
         android:id="@+id/share_app"
