@@ -2,6 +2,8 @@ package ru.practicum.playlistmaker.layout
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PersistableBundle
 import android.util.Log
 import android.view.KeyEvent
@@ -14,6 +16,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +41,8 @@ import ru.practicum.playlistmaker.service.HistoryService
 
 const val TRACKS_BASE_URL = "https://itunes.apple.com"
 class SearchActivity : AppCompatActivity() {
+    private val searchRunnable = Runnable { searchTrack() }
+    private val handler = Handler(Looper.getMainLooper())
     private var searchText = ""
     private lateinit var recyclerView: RecyclerView
     private lateinit var troubleView: LinearLayout
@@ -52,6 +57,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historyService: HistoryService
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var adapter: TrackAdapter
+
+    private lateinit var progressBar: ProgressBar
     private val retrofit = Retrofit.Builder()
         .baseUrl(TRACKS_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
@@ -73,9 +80,11 @@ class SearchActivity : AppCompatActivity() {
         refreshButton.setOnClickListener { refreshSearch() }
 
         clearTextButton = findViewById(R.id.clear_text)
-        searchField = findViewById<EditText>(R.id.search_field)
-        youSearch = findViewById<TextView>(R.id.you_search)
+        searchField = findViewById(R.id.search_field)
+        youSearch = findViewById(R.id.you_search)
         clearHistory = findViewById(R.id.clear_history)
+
+        progressBar = findViewById(R.id.progressBar)
 
         sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_SHARED_PREFS, MODE_PRIVATE)
         historyService = HistoryService(sharedPrefs, tracks)
@@ -119,10 +128,6 @@ class SearchActivity : AppCompatActivity() {
             onClearTextButtonClick()
         }
 
-        searchField.setOnKeyListener { v, keyCode, event ->
-            onKeyClick(keyCode, event.action)
-        }
-
         clearHistory.setOnClickListener {
             historyService.clearHistory()
             adapter.notifyDataSetChanged()
@@ -135,24 +140,6 @@ class SearchActivity : AppCompatActivity() {
     private fun hideHistoryView() {
         youSearch.visibility = GONE
         clearHistory.visibility = GONE
-    }
-
-    private fun onKeyClick(keyCode: Int, action: Int): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_ENTER && action == KeyEvent.ACTION_UP) {
-            val text = searchField.text
-            if (text.isNullOrEmpty()) {
-                searchText = ""
-                clearTextButton.visibility = GONE
-            } else {
-                searchText = text.toString()
-                clearTextButton.visibility = VISIBLE
-                youSearch.visibility = GONE
-                clearHistory.visibility = GONE
-                searchTrack(searchText)
-            }
-            return true
-        }
-        return false
     }
 
     private fun onClearTextButtonClick() {
@@ -174,6 +161,7 @@ class SearchActivity : AppCompatActivity() {
                 historyService.showHistory()
                 youSearch.visibility = VISIBLE
                 clearHistory.visibility = VISIBLE
+                progressBar.visibility = GONE
                 adapter.notifyDataSetChanged()
             }
             clearTextButton.visibility = GONE
@@ -184,39 +172,46 @@ class SearchActivity : AppCompatActivity() {
             clearTextButton.visibility = VISIBLE
             youSearch.visibility = GONE
             clearHistory.visibility = GONE
+            progressBar.visibility = VISIBLE
+            searchDebounce()
         }
     }
 
-    private fun searchTrack(searchText: String) {
-        trackService.findTrack(searchText).enqueue(object : Callback<TracksResponse> {
-            override fun onResponse(call: Call<TracksResponse?>, response: Response<TracksResponse?>) {
-                if (response.isSuccessful) {
-                    tracks.clear()
-                    val result = response.body()?.results
-                    if (result?.isNotEmpty() == true) {
-                        tracks.addAll(result)
-                        adapter.notifyDataSetChanged()
-                    }
-                    if (tracks.isEmpty()) {
-                        showMessage(false)
+    private fun searchTrack() {
+        progressBar.visibility = VISIBLE
+        if (!searchText.isEmpty()) {
+            trackService.findTrack(searchText).enqueue(object : Callback<TracksResponse> {
+                override fun onResponse(call: Call<TracksResponse?>, response: Response<TracksResponse?>) {
+                    if (response.isSuccessful) {
+                        tracks.clear()
+                        val result = response.body()?.results
+                        if (result?.isNotEmpty() == true) {
+                            tracks.addAll(result)
+                            adapter.notifyDataSetChanged()
+                        }
+                        if (tracks.isEmpty()) {
+                            showMessage(false)
+                        } else {
+                            recyclerView.visibility = VISIBLE
+                            troubleView.visibility = GONE
+                        }
                     } else {
-                        recyclerView.visibility = VISIBLE
-                        troubleView.visibility = GONE
+                        showMessage(true)
                     }
-                } else {
+                }
+
+                override fun onFailure(call: Call<TracksResponse?>, t: Throwable) {
                     showMessage(true)
                 }
-            }
-
-            override fun onFailure(call: Call<TracksResponse?>, t: Throwable) {
-                showMessage(true)
-            }
-        })
+            })
+        }
+        progressBar.visibility = GONE
     }
 
     private fun showMessage(isError: Boolean) {
         recyclerView.visibility = GONE
         troubleView.visibility = VISIBLE
+        progressBar.visibility = GONE
         if (isError) {
             troubleImage.setImageResource(R.drawable.get_tracks_error)
             troubleText.text = getString(R.string.get_tracks_error_message)
@@ -229,7 +224,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun refreshSearch() {
-        searchTrack(searchText)
+        searchTrack()
     }
 
     override fun onSaveInstanceState(
@@ -240,7 +235,13 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(SEARCH_TEXT, searchText)
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }
