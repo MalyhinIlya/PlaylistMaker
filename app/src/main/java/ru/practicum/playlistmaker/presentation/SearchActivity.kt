@@ -1,13 +1,10 @@
-package ru.practicum.playlistmaker.layout
+package ru.practicum.playlistmaker.presentation
 
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.PersistableBundle
-import android.util.Log
-import android.view.KeyEvent
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
@@ -33,11 +30,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.playlistmaker.PLAYLIST_MAKER_SHARED_PREFS
 import ru.practicum.playlistmaker.R
-import ru.practicum.playlistmaker.adapter.TrackAdapter
-import ru.practicum.playlistmaker.api.TrackApi
-import ru.practicum.playlistmaker.model.Track
-import ru.practicum.playlistmaker.model.TracksResponse
+import ru.practicum.playlistmaker.data.dto.TracksResponse
+import ru.practicum.playlistmaker.data.network.TrackService
+import ru.practicum.playlistmaker.domain.models.Track
+import ru.practicum.playlistmaker.presentation.track.TrackAdapter
 import ru.practicum.playlistmaker.service.HistoryService
+import kotlin.jvm.java
 
 const val TRACKS_BASE_URL = "https://itunes.apple.com"
 class SearchActivity : AppCompatActivity() {
@@ -63,7 +61,7 @@ class SearchActivity : AppCompatActivity() {
         .baseUrl(TRACKS_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    private val trackService = retrofit.create(TrackApi::class.java)
+    private val trackService = retrofit.create(TrackService::class.java)
     private val tracks = mutableListOf<Track>()
 
     fun init() {

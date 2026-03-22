@@ -3,7 +3,7 @@ package ru.practicum.playlistmaker.service
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import ru.practicum.playlistmaker.model.Track
+import ru.practicum.playlistmaker.domain.models.Track
 import java.lang.reflect.Type
 
 

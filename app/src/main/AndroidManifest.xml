@@ -13,16 +13,16 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.PlaylistMaker">
         <activity
-            android:name=".layout.PlayerActivity"
+            android:name=".presentation.PlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".layout.MediaGalleryActivity"
+            android:name=".presentation.MediaGalleryActivity"
             android:exported="true" />
         <activity
-            android:name=".layout.SearchActivity"
+            android:name=".presentation.SearchActivity"
             android:exported="true" />
         <activity
-            android:name=".layout.SettingsActivity"
+            android:name=".presentation.SettingsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".layout.MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Base.Theme.PlaylistMaker">
             <intent-filter>

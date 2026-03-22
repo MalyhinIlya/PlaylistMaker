@@ -1,4 +1,4 @@
-package ru.practicum.playlistmaker.layout
+package ru.practicum.playlistmaker.presentation.track
 
 import android.graphics.Color
 import android.view.View
@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.practicum.playlistmaker.R
-import ru.practicum.playlistmaker.model.Track
+import ru.practicum.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 

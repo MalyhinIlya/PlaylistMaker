@@ -1,19 +1,14 @@
-package ru.practicum.playlistmaker.adapter
+package ru.practicum.playlistmaker.presentation.track
 
-import android.content.Context
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import ru.practicum.playlistmaker.layout.PlayerActivity
 import ru.practicum.playlistmaker.R
-import ru.practicum.playlistmaker.layout.TrackViewHolder
-import ru.practicum.playlistmaker.model.Track
+import ru.practicum.playlistmaker.domain.models.Track
 import ru.practicum.playlistmaker.service.HistoryService
-import ru.practicum.playlistmaker.utils.Debouncer
+import ru.practicum.playlistmaker.presentation.PlayerActivity
 import ru.practicum.playlistmaker.utils.Debouncer.Companion.clickDebounce
 
 const val TRACK_KEY = "TRACK"
