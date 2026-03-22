@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.PersistableBundle
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
@@ -24,18 +25,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import ru.practicum.playlistmaker.PLAYLIST_MAKER_SHARED_PREFS
+import ru.practicum.playlistmaker.domain.PLAYLIST_MAKER_SHARED_PREFS
 import ru.practicum.playlistmaker.R
 import ru.practicum.playlistmaker.data.dto.TracksResponse
-import ru.practicum.playlistmaker.data.network.TrackService
 import ru.practicum.playlistmaker.domain.models.Track
 import ru.practicum.playlistmaker.presentation.track.TrackAdapter
-import ru.practicum.playlistmaker.service.HistoryService
-import kotlin.jvm.java
+import ru.practicum.playlistmaker.data.HistoryService
+import ru.practicum.playlistmaker.domain.Creator
+import ru.practicum.playlistmaker.domain.api.HistoryRepository
 
 const val TRACKS_BASE_URL = "https://itunes.apple.com"
 class SearchActivity : AppCompatActivity() {
@@ -52,16 +49,11 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchField: EditText
     private lateinit var youSearch: TextView
     private lateinit var clearHistory: MaterialButton
-    private lateinit var historyService: HistoryService
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var adapter: TrackAdapter
 
+    private lateinit var historyRepository: HistoryRepository
     private lateinit var progressBar: ProgressBar
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(TRACKS_BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val trackService = retrofit.create(TrackService::class.java)
     private val tracks = mutableListOf<Track>()
 
     fun init() {
@@ -85,8 +77,8 @@ class SearchActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
 
         sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_SHARED_PREFS, MODE_PRIVATE)
-        historyService = HistoryService(sharedPrefs, tracks)
-        adapter = TrackAdapter(tracks, historyService)
+        historyRepository = Creator.getHistoryRepository(sharedPrefs)
+        adapter = TrackAdapter(tracks, historyRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,11 +102,13 @@ class SearchActivity : AppCompatActivity() {
         })
 
         searchField.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && searchField.text.isEmpty() && !historyService.isEmpty()) {
+            val history = historyRepository.getHistory()
+            if (hasFocus && searchField.text.isEmpty() && !history.isEmpty()) {
                 youSearch.visibility = VISIBLE
                 recyclerView.visibility = VISIBLE
                 clearHistory.visibility = VISIBLE
-                historyService.showHistory()
+                tracks.clear()
+                tracks.addAll(history)
                 adapter.notifyDataSetChanged()
             } else {
                 youSearch.visibility = GONE
@@ -127,7 +121,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearHistory.setOnClickListener {
-            historyService.clearHistory()
+            tracks.clear()
+            historyRepository.clear()
             adapter.notifyDataSetChanged()
             hideHistoryView()
         }
@@ -155,8 +150,9 @@ class SearchActivity : AppCompatActivity() {
         if (text.isNullOrEmpty()) {
             searchText = ""
             tracks.clear()
-            if (!historyService.isEmpty()) {
-                historyService.showHistory()
+            val history = historyRepository.getHistory()
+            if (!history.isEmpty()) {
+                tracks.addAll(history)
                 youSearch.visibility = VISIBLE
                 clearHistory.visibility = VISIBLE
                 progressBar.visibility = GONE
@@ -177,29 +173,20 @@ class SearchActivity : AppCompatActivity() {
 
     private fun searchTrack() {
         progressBar.visibility = VISIBLE
-        if (!searchText.isEmpty()) {
-            trackService.findTrack(searchText).enqueue(object : Callback<TracksResponse> {
-                override fun onResponse(call: Call<TracksResponse?>, response: Response<TracksResponse?>) {
-                    if (response.isSuccessful) {
-                        tracks.clear()
-                        val result = response.body()?.results
-                        if (result?.isNotEmpty() == true) {
-                            tracks.addAll(result)
-                            adapter.notifyDataSetChanged()
-                        }
-                        if (tracks.isEmpty()) {
-                            showMessage(false)
-                        } else {
-                            recyclerView.visibility = VISIBLE
-                            troubleView.visibility = GONE
-                        }
+        if (!searchText.isEmpty()) {;
+            Creator.provideTracksInteractor().findTracks(searchText, {
+                handler.post {
+                    tracks.clear()
+                    tracks.addAll(it)
+                    recyclerView.visibility = VISIBLE
+                    adapter.notifyDataSetChanged()
+                    if (tracks.isEmpty()) {
+                        showMessage(false)
                     } else {
-                        showMessage(true)
+                        recyclerView.visibility = VISIBLE
+                        troubleView.visibility = GONE
                     }
-                }
-
-                override fun onFailure(call: Call<TracksResponse?>, t: Throwable) {
-                    showMessage(true)
+                    progressBar.visibility = GONE
                 }
             })
         }

@@ -11,9 +11,9 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 import androidx.core.net.toUri
 import com.google.android.material.switchmaterial.SwitchMaterial
-import ru.practicum.playlistmaker.App
-import ru.practicum.playlistmaker.DARK_THEME_KEY
-import ru.practicum.playlistmaker.PLAYLIST_MAKER_SHARED_PREFS
+import ru.practicum.playlistmaker.domain.App
+import ru.practicum.playlistmaker.domain.DARK_THEME_KEY
+import ru.practicum.playlistmaker.domain.PLAYLIST_MAKER_SHARED_PREFS
 import ru.practicum.playlistmaker.R
 
 const val PLAYLIST_MAKER_SHARED_PREFS = "playlist_maker_shared_prefs"

@@ -1,13 +1,10 @@
-package ru.practicum.playlistmaker.service
+package ru.practicum.playlistmaker.data
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import ru.practicum.playlistmaker.domain.models.Track
-import java.lang.reflect.Type
 
 
-const val SEARCH_HISTORY_KEY = "SEARCH_HISTORY"
 class HistoryService(val sharedPrefs: SharedPreferences, val tracks: MutableList<Track>) {
 
     fun showHistory() {
@@ -26,8 +23,6 @@ class HistoryService(val sharedPrefs: SharedPreferences, val tracks: MutableList
     }
 
     fun clearHistory() {
-        tracks.clear()
-        sharedPrefs.edit().remove(SEARCH_HISTORY_KEY).apply()
     }
 
     fun isEmpty() = sharedPrefs.getString(SEARCH_HISTORY_KEY, "")?.isEmpty()!!
