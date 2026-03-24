@@ -1,11 +1,10 @@
-package ru.practicum.playlistmaker.domain
+package ru.practicum.playlistmaker.di.app
 
 import android.content.SharedPreferences
 import ru.practicum.playlistmaker.data.HistoryRepositoryImpl
 import ru.practicum.playlistmaker.data.TracksRepositoryImpl
 import ru.practicum.playlistmaker.data.network.RetrofitNetworkClient
 import ru.practicum.playlistmaker.domain.api.TrackInteractor
-import ru.practicum.playlistmaker.domain.api.TrackRepository
 import ru.practicum.playlistmaker.domain.impl.TrackInteractorImpl
 
 object Creator {

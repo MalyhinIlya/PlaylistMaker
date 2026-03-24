@@ -1,12 +1,12 @@
 package ru.practicum.playlistmaker.data.network
 
+import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.playlistmaker.data.NetworkClient
+import ru.practicum.playlistmaker.data.core.config.TRACKS_BASE_URL
 import ru.practicum.playlistmaker.data.dto.Response
 import ru.practicum.playlistmaker.data.dto.TracksRequest
-import ru.practicum.playlistmaker.data.dto.TracksResponse
-import ru.practicum.playlistmaker.presentation.TRACKS_BASE_URL
 
 class RetrofitNetworkClient: NetworkClient {
 

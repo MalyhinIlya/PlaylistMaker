@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.PersistableBundle
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
@@ -24,17 +23,13 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
-import retrofit2.Call
-import ru.practicum.playlistmaker.domain.PLAYLIST_MAKER_SHARED_PREFS
 import ru.practicum.playlistmaker.R
-import ru.practicum.playlistmaker.data.dto.TracksResponse
+import ru.practicum.playlistmaker.di.app.Creator
+import ru.practicum.playlistmaker.domain.PLAYLIST_MAKER_SHARED_PREFS
+import ru.practicum.playlistmaker.domain.api.HistoryRepository
 import ru.practicum.playlistmaker.domain.models.Track
 import ru.practicum.playlistmaker.presentation.track.TrackAdapter
-import ru.practicum.playlistmaker.data.HistoryService
-import ru.practicum.playlistmaker.domain.Creator
-import ru.practicum.playlistmaker.domain.api.HistoryRepository
 
-const val TRACKS_BASE_URL = "https://itunes.apple.com"
 class SearchActivity : AppCompatActivity() {
     private val searchRunnable = Runnable { searchTrack() }
     private val handler = Handler(Looper.getMainLooper())
@@ -176,17 +171,20 @@ class SearchActivity : AppCompatActivity() {
         if (!searchText.isEmpty()) {;
             Creator.provideTracksInteractor().findTracks(searchText, {
                 handler.post {
-                    tracks.clear()
-                    tracks.addAll(it)
-                    recyclerView.visibility = VISIBLE
-                    adapter.notifyDataSetChanged()
-                    if (tracks.isEmpty()) {
-                        showMessage(false)
-                    } else {
+                    if (it.isFailure) showMessage(true)
+                    else {
+                        tracks.clear()
+                        tracks.addAll(it.getOrNull() ?: emptyList())
                         recyclerView.visibility = VISIBLE
-                        troubleView.visibility = GONE
+                        adapter.notifyDataSetChanged()
+                        if (tracks.isEmpty()) {
+                            showMessage(false)
+                        } else {
+                            recyclerView.visibility = VISIBLE
+                            troubleView.visibility = GONE
+                        }
+                        progressBar.visibility = GONE
                     }
-                    progressBar.visibility = GONE
                 }
             })
         }

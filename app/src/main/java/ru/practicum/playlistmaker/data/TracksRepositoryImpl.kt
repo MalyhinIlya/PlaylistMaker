@@ -6,10 +6,10 @@ import ru.practicum.playlistmaker.domain.api.TrackRepository
 import ru.practicum.playlistmaker.domain.models.Track
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient): TrackRepository  {
-    override fun findTracks(expression: String): List<Track> {
+    override fun findTracks(expression: String): Result<List<Track>> {
         val response = networkClient.doRequest(TracksRequest(expression))
         if (response.resultCode == 200) {
-            return (response as TracksResponse).results.map {
+            return Result.success((response as TracksResponse).results.map {
                 Track(
                     it.trackName,
                     it.artistName,
@@ -21,9 +21,9 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient): TrackRepos
                     it.releaseDate,
                     it.country
                 )
-            }
+            })
         } else {
-            return emptyList()
+            return Result.failure(Exception())
         }
     }
 }
