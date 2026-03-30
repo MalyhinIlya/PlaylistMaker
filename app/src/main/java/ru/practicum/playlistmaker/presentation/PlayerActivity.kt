@@ -1,4 +1,4 @@
-package ru.practicum.playlistmaker.layout
+package ru.practicum.playlistmaker.presentation
 
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -16,11 +16,10 @@ import com.bumptech.glide.Glide
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
 import ru.practicum.playlistmaker.R
-import ru.practicum.playlistmaker.model.Track
+import ru.practicum.playlistmaker.domain.models.Track
+import ru.practicum.playlistmaker.presentation.track.TRACK_KEY
 import java.text.SimpleDateFormat
 import java.util.Locale
-
-const val TRACK_KEY = "TRACK"
 
 class PlayerActivity : AppCompatActivity() {
     companion object {

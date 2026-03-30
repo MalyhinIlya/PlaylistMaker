@@ -1,8 +1,7 @@
-package ru.practicum.playlistmaker.utils
+package ru.practicum.playlistmaker.domain
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 
 class Debouncer() {
     companion object {
@@ -21,4 +20,3 @@ class Debouncer() {
         }
     }
 }
-
