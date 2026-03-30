@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import ru.practicum.playlistmaker.R
 import ru.practicum.playlistmaker.domain.models.Track
-import ru.practicum.playlistmaker.data.HistoryService
 import ru.practicum.playlistmaker.presentation.PlayerActivity
 import ru.practicum.playlistmaker.domain.Debouncer.Companion.clickDebounce
 import ru.practicum.playlistmaker.domain.api.HistoryRepository
